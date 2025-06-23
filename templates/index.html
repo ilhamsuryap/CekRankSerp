@@ -1,96 +1,115 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>Cek Ranking SERP</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-100 min-h-screen flex items-center justify-center p-4">
-  <div class="bg-white p-8 rounded-2xl shadow-lg max-w-2xl w-full">
-    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">🔍 Cek Ranking Website di Google</h1>
+{% extends "base.html" %}
 
-    <form method="POST" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-purple-600">Kata Kunci</label>
-        <input type="text" name="keyword" class="mt-1 p-2 w-full border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300" required>
-      </div>
+{% block title %}Cek Ranking Website di Google{% endblock %}
 
-      <div>
-        <label class="block text-sm font-medium text-purple-600">Domain Target</label>
-        <input type="text" name="domain" class="mt-1 p-2 w-full border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300" required placeholder="contoh: halodoc.com">
-      </div>
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-dark mb-4 text-center animate-fade-up">🔍 Cek Ranking Website di Google</h1>
+    <p class="text-center text-lg text-muted mb-10 animate-fade-up" style="animation-delay: 0.2s;">Masukkan detail di bawah untuk memeriksa posisi website Anda di hasil pencarian Google.</p>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-purple-600">Bahasa SERP</label>
-          <select name="hl" class="mt-1 p-2 w-full border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300">
-            <option value="id">Indonesia</option>
-            <option value="en">English</option>
-          </select>
-        </div>
+    <div class="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-lg border border-slate-200 animate-scale-in">
+        <form method="POST" class="space-y-6">
+            <div>
+                <label for="keyword" class="block text-sm font-medium text-dark mb-1">Kata Kunci</label>
+                <input type="text" id="keyword" name="keyword" required
+                       class="mt-1 p-3 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
+                       placeholder="contoh: alat cek ranking">
+            </div>
 
-        <div>
-          <label class="block text-sm font-medium text-purple-600">Negara</label>
-          <select name="gl" class="mt-1 p-2 w-full border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300">
-            <option value="id">Indonesia</option>
-            <option value="sg">Singapore</option>
-            <option value="us">United States</option>
-          </select>
-        </div>
+            <div>
+                <label for="domain" class="block text-sm font-medium text-dark mb-1">Domain Target</label>
+                <input type="text" id="domain" name="domain" required
+                       class="mt-1 p-3 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
+                       placeholder="contoh: halodoc.com">
+            </div>
 
-        <div>
-          <label class="block text-sm font-medium text-purple-600">Google Domain</label>
-          <select name="google_domain" class="mt-1 p-2 w-full border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300">
-            <option value="google.co.id">google.co.id</option>
-            <option value="google.com">google.com</option>
-            <option value="google.com.sg">google.com.sg</option>
-          </select>
-        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="hl" class="block text-sm font-medium text-dark mb-1">Bahasa SERP</label>
+                    <select id="hl" name="hl"
+                            class="mt-1 p-3 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                        <option value="id">Indonesia</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
 
-        <div>
-          <label class="block text-sm font-medium text-purple-600">Jumlah Hasil</label>
-          <select name="num" class="mt-1 p-2 w-full border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300">
-            <option value="10">10</option>
-            <option value="50">50</option>
-            <option value="100" selected>100</option>
-          </select>
-        </div>
-      </div>
+                <div>
+                    <label for="gl" class="block text-sm font-medium text-dark mb-1">Negara</label>
+                    <select id="gl" name="gl"
+                            class="mt-1 p-3 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                        <option value="id">Indonesia</option>
+                        <option value="sg">Singapore</option>
+                        <option value="us">United States</option>
+                    </select>
+                </div>
 
-      <div class="flex justify-center">
-        <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">Cek Rank</button>
-      </div>
-    </form>
+                <div>
+                    <label for="google_domain" class="block text-sm font-medium text-dark mb-1">Google Domain</label>
+                    <select id="google_domain" name="google_domain"
+                            class="mt-1 p-3 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                        <option value="google.co.id">google.co.id</option>
+                        <option value="google.com">google.com</option>
+                        <option value="google.com.sg">google.com.sg</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="num" class="block text-sm font-medium text-dark mb-1">Jumlah Hasil</label>
+                    <select id="num" name="num"
+                            class="mt-1 p-3 w-full border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150 ease-in-out">
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100" selected>100</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit"
+                        class="group relative flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-white btn-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-300 ease-in-out transform hover:-translate-y-1">
+                    Cek Rank
+                    <!-- <span class="absolute right-0 inset-y-0 flex items-center pr-3">
+                        <i class="fas fa-search group-hover:translate-x-1 transition-transform duration-200"></i>
+                    </span> -->
+                </button>
+            </div>
+        </form>
+    </div>
 
     {% if result %}
-      <div class="mt-6">
-        <h2 class="text-lg font-semibold text-purple-700 mb-2">Hasil untuk <span class="font-bold">{{ result.domain }}</span> - <span class="italic">"{{ result.keyword }}"</span></h2>
-        <p class="mb-2 text-purple-600">Total ditemukan di {{ result.total_found }} posisi dalam {{ request.form['num'] }} hasil pertama.</p>
+        <div class="mt-12 pt-8 border-t border-slate-200 animate-fade-up" style="animation-delay: 0.3s;">
+            <h2 class="text-3xl font-bold text-dark mb-4">Hasil untuk <span class="text-primary">{{ result.domain }}</span> - <span class="italic">"{{ result.keyword }}"</span></h2>
+            <p class="mb-6 text-muted">Ditemukan <span class="font-bold text-dark">{{ result.total_found }}</span> posisi dalam {{ request.form['num'] }} hasil pertama.</p>
 
-        {% if result.total_found > 0 %}
-          <div class="overflow-x-auto">
-            <table class="min-w-full bg-white border border-purple-200 rounded-lg">
-              <thead class="bg-purple-100 text-purple-700">
-                <tr>
-                  <th class="py-2 px-4 text-left">Posisi</th>
-                  <th class="py-2 px-4 text-left">URL</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in result.ranks %}
-                <tr class="border-t border-purple-100 hover:bg-purple-50">
-                  <td class="py-2 px-4">{{ item.position }}</td>
-                  <td class="py-2 px-4"><a href="{{ item.link }}" class="text-blue-600 hover:underline" target="_blank">{{ item.link }}</a></td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        {% else %}
-          <p class="text-red-600">Domain tidak ditemukan dalam hasil pencarian.</p>
-        {% endif %}
-      </div>
+            {% if result.total_found > 0 %}
+                <div class="overflow-x-auto rounded-xl shadow-lg border border-slate-200">
+                    <table class="min-w-full bg-white rounded-xl">
+                        <thead class="bg-lighter text-dark border-b border-slate-200">
+                            <tr>
+                                <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Posisi</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Judul</th>
+                                <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">URL</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for item in result.ranks %}
+                            <tr class="bg-white hover:bg-light transition duration-150 ease-in-out">
+                                <td class="py-3 px-6 text-dark">{{ item.position }}</td>
+                                <td class="py-3 px-6 text-dark">{{ item.title }}</td>
+                                <td class="py-3 px-6">
+                                    <a href="{{ item.link }}" class="text-primary hover:underline break-all" target="_blank" rel="noopener noreferrer">
+                                        {{ item.link }}
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center text-red-600 font-medium p-4 bg-red-50 rounded-lg border border-red-100">Domain tidak ditemukan dalam {{ request.form['num'] }} hasil pencarian untuk kata kunci ini.</p>
+            {% endif %}
+        </div>
     {% endif %}
-  </div>
-</body>
-</html>
+</div>
+{% endblock %}

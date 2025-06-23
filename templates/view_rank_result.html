@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Hasil Rank - SERP Rank Checker{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-dark mb-4 text-center animate-fade-up">Detail Hasil Cek Ranking</h1>
+    <p class="text-center text-lg text-muted mb-10 animate-fade-up" style="animation-delay: 0.2s;">Lihat informasi lengkap tentang hasil pencarian Anda di sini.</p>
+
+    <div class="max-w-3xl mx-auto p-10 bg-white rounded-xl shadow-lg border border-slate-200 animate-scale-in">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <p class="text-lg text-dark">
+                <span class="font-semibold text-muted">Kata Kunci:</span> <br class="md:hidden"/> <span class="font-bold">{{ result.keyword }}</span>
+            </p>
+            <p class="text-lg text-dark">
+                <span class="font-semibold text-muted">Domain Target:</span> <br class="md:hidden"/> <span class="font-bold">{{ result.domain }}</span>
+            </p>
+            <p class="text-lg text-dark">
+                <span class="font-semibold text-muted">Ditemukan di:</span> <br class="md:hidden"/> <span class="font-bold text-primary">{{ result.total_found }}</span> posisi
+            </p>
+            <p class="text-lg text-dark">
+                <span class="font-semibold text-muted">Dicek Pada:</span> <br class="md:hidden"/> <span class="font-bold">{{ rank_result_obj.created_at.strftime('%d %b %Y %H:%M') }}</span>
+            </p>
+            <p class="text-lg text-dark md:col-span-2">
+                <span class="font-semibold text-muted">Dicek Oleh:</span> <br class="md:hidden"/> <span class="font-bold">{{ rank_result_obj.user.email if rank_result_obj.user else 'N/A' }}</span>
+            </p>
+            </div>
+    </div>
+
+    {% if result.ranks %}
+        <h2 class="text-3xl font-bold text-dark mb-6 mt-12 animate-fade-up">Posisi Ditemukan:</h2>
+        <div class="overflow-x-auto rounded-xl shadow-lg border border-slate-200 mb-6 animate-fade-up" style="animation-delay: 0.4s;">
+            <table class="min-w-full bg-white rounded-xl">
+                <thead class="bg-lighter text-dark border-b border-slate-200">
+                    <tr>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Posisi</th>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Judul</th>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">URL</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for item in result.ranks %}
+                    <tr class="bg-white hover:bg-light transition duration-150 ease-in-out">
+                        <td class="py-3 px-6 text-dark">{{ item.position }}</td>
+                        <td class="py-3 px-6 text-dark">{{ item.title }}</td>
+                        <td class="py-3 px-6">
+                            <a href="{{ item.link }}" class="text-primary hover:underline break-all" target="_blank" rel="noopener noreferrer">
+                                {{ item.link }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Bagian baru: Tombol Download PDF dan XLSX #}
+        <div class="mt-8 text-center animate-fade-up" style="animation-delay: 0.5s;">
+            <a href="{{ url_for('download_rank_result', result_id=rank_result_obj.id, file_format='pdf') }}" class="group relative inline-flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg mr-4">
+                <i class="fas fa-file-pdf mr-2"></i> Download PDF
+            </a>
+            <a href="{{ url_for('download_rank_result', result_id=rank_result_obj.id, file_format='xlsx') }}" class="group relative inline-flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg">
+                <i class="fas fa-file-excel mr-2"></i> Download XLSX
+            </a>
+        </div>
+
+    {% else %}
+        <p class="text-center text-muted p-4 bg-lighter rounded-lg border border-blue-100 mt-12 animate-fade-up" style="animation-delay: 0.5s;">Domain tidak ditemukan dalam hasil pencarian untuk kata kunci ini, atau data rank tidak tersedia.</p>
+    {% endif %}
+
+    <div class="mt-8 text-center animate-fade-up" style="animation-delay: 0.6s;">
+        <a href="{{ url_for('dashboard') }}" class="group relative inline-flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

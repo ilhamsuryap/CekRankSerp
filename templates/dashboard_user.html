@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard User - SERP Rank Checker{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-extrabold text-dark mb-4 text-center animate-fade-up">Dashboard User 👋</h1>
+    <p class="text-center text-lg text-muted mb-10 animate-fade-up" style="animation-delay: 0.2s;">Selamat datang, {{ current_user.email }}! Di sini Anda bisa melihat riwayat cek ranking Anda.</p>
+
+    <div class="mb-12 flex justify-center animate-fade-up" style="animation-delay: 0.3s;">
+        <a href="{{ url_for('index') }}" class="group relative flex justify-center py-3 px-6 border border-transparent text-lg font-semibold rounded-lg text-white btn-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg">
+            <i class="fas fa-search mr-2"></i> Cek Rank Baru
+            <span class="absolute right-0 inset-y-0 flex items-center pr-3">
+                <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform duration-200"></i>
+            </span>
+        </a>
+    </div>
+
+    <h2 class="text-3xl font-bold text-dark mb-6 mt-12 animate-fade-up">Riwayat Cek Ranking Anda</h2>
+
+    {% if user_rank_results %}
+        <div class="overflow-x-auto rounded-xl shadow-lg border border-slate-200 mb-12 animate-fade-up" style="animation-delay: 0.4s;">
+            <table class="min-w-full bg-white rounded-xl">
+                <thead class="bg-lighter text-dark border-b border-slate-200">
+                    <tr>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Tanggal</th>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Kata Kunci</th>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Domain</th>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Ditemukan</th>
+                        <th class="py-4 px-6 text-left text-sm font-semibold uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for result in user_rank_results %}
+                    <tr class="bg-white hover:bg-light transition duration-150 ease-in-out">
+                        <td class="py-3 px-6 text-dark">{{ result.created_at.strftime('%d %b %Y %H:%M') }}</td>
+                        <td class="py-3 px-6 text-dark">{{ result.keyword }}</td>
+                        <td class="py-3 px-6 text-muted">{{ result.domain }}</td>
+                        <!-- {# result.result is already parsed in app.py from JSON string to Python object #} -->
+                        <td class="py-3 px-6 text-dark">{{ (result.result | from_json).total_found }}</td>
+                        <!-- <td class="py-3 px-4 text-gray-800">{{ (result.result | from_json).total_found }}</td> -->
+                        <td class="py-3 px-6">
+                            <a href="{{ url_for('view_rank_result', result_id=result.id) }}" class="text-primary hover:text-secondary hover:underline transition-colors font-medium">Lihat Detail</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-muted p-4 bg-lighter rounded-lg border border-blue-100 animate-fade-up" style="animation-delay: 0.5s;">Anda belum memiliki riwayat cek ranking. Mulai cek sekarang!</p>
+    {% endif %}
+
+</div>
+{% endblock %}

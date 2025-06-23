@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar - SERP Rank Checker{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-xl shadow-lg border border-slate-200 animate-scale-in">
+        <div>
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center shadow-lg">
+                    <i class="fas fa-user-plus text-white text-3xl"></i> {# Icon for registration #}
+                </div>
+            </div>
+            <h1 class="mt-6 text-center text-3xl font-extrabold text-dark">
+                📝 Buat Akun Baru
+            </h1>
+            <p class="mt-2 text-center text-sm text-muted">
+                Daftar sekarang untuk mulai memeriksa ranking website Anda!
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}" class="mt-8 space-y-6">
+            <div>
+                <label for="email" class="block text-sm font-medium text-dark mb-1">Alamat Email</label>
+                <input type="email" id="email" name="email" required autocomplete="email"
+                       class="appearance-none relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-dark rounded-lg focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition duration-150 ease-in-out"
+                       placeholder="nama@contoh.com">
+            </div>
+
+            <div>
+                <label for="phone_number" class="block text-sm font-medium text-dark mb-1">Nomor Telepon (WhatsApp)</label>
+                <input type="tel" id="phone_number" name="phone_number" required
+                       class="appearance-none relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-dark rounded-lg focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition duration-150 ease-in-out"
+                       placeholder="contoh: 6281234567890 (tanpa +)">
+                <p class="mt-2 text-xs text-muted">Kami akan mengirimkan notifikasi penting melalui nomor ini.</p>
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-dark mb-1">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="new-password"
+                       class="appearance-none relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-dark rounded-lg focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition duration-150 ease-in-out"
+                       placeholder="Minimal 6 karakter">
+            </div>
+
+            <div>
+                <label for="confirm_password" class="block text-sm font-medium text-dark mb-1">Konfirmasi Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password"
+                       class="appearance-none relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-dark rounded-lg focus:outline-none focus:ring-primary focus:border-primary sm:text-sm transition duration-150 ease-in-out"
+                       placeholder="Masukkan ulang password Anda">
+            </div>
+
+            <div>
+                <button type="submit"
+                        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-lg font-semibold rounded-lg text-white btn-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition duration-300 ease-in-out transform hover:-translate-y-1">
+                    Daftar
+                    <span class="absolute right-0 inset-y-0 flex items-center pr-3">
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform duration-200"></i> {# Icon for registration button #}
+                    </span>
+                </button>
+            </div>
+        </form>
+
+        <p class="mt-8 text-center text-sm text-muted">
+            Sudah punya akun?
+            <a href="{{ url_for('login') }}" class="font-medium text-primary hover:text-secondary transition-colors">Login di sini</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
