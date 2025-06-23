@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cek Ranking{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .flash-message {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            opacity: 0; /* Mulai tersembunyi */
+            animation: fade-in-out 5s forwards; /* Animasi fade */
+        }
+        .flash-success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+        .flash-error {
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+        }
+        .flash-info {
+            color: #055160;
+            background-color: #cff4fc;
+            border-color: #b6effb;
+        }
+        .flash-warning {
+            color: #664d03;
+            background-color: #fff3cd;
+            border-color: #ffecb5;
+        }
+
+        /* Keyframes untuk animasi fade */
+        @keyframes fade-in-out {
+            0% { opacity: 0; transform: translateY(-20px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-100 min-h-screen flex flex-col">
+    <nav class="bg-purple-700 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('landing_page') }}" class="text-white text-2xl font-bold rounded-lg px-3 py-1 hover:bg-purple-600 transition">SERP Rank Checker</a>
+            <div class="flex items-center space-x-4">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('index') }}" class="text-white hover:text-purple-200 transition">Cek Rank</a>
+                    <a href="{{ url_for('dashboard') }}" class="text-white hover:text-purple-200 transition">Dashboard</a>
+                    <span class="text-white">Halo, {{ current_user.email }}! ({{ current_user.role }})</span>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="text-white hover:text-purple-200 transition">Login</a>
+                    <a href="{{ url_for('register') }}" class="bg-purple-500 text-white px-3 py-1 rounded-lg hover:bg-purple-600 transition">Daftar</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="max-w-4xl w-full bg-white p-8 rounded-2xl shadow-lg">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }} mb-4" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="bg-purple-700 p-4 text-center text-white text-sm mt-auto">
+        <div class="container mx-auto">
+            &copy; {{ now.year }} SERP Rank Checker. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>

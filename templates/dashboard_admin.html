@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Admin - SERP Rank Checker{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">Dashboard Admin 👑</h1>
+    <p class="text-center text-gray-600 mb-8">Selamat datang, Admin! Kelola pengguna dan data aplikasi di sini.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-purple-100 p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-xl font-semibold text-purple-700 mb-2">Total Pengguna</h3>
+            <p class="text-4xl font-bold text-purple-800">{{ all_users|length }}</p>
+        </div>
+        <div class="bg-green-100 p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-xl font-semibold text-green-700 mb-2">Pengguna Menunggu Persetujuan</h3>
+            <p class="text-4xl font-bold text-green-800">{{ pending_users|length }}</p>
+        </div>
+        <div class="bg-blue-100 p-6 rounded-lg shadow-md text-center">
+            <h3 class="text-xl font-semibold text-blue-700 mb-2">Total Cek Rank</h3>
+            <p class="text-4xl font-bold text-blue-800">{{ all_rank_results|length }}</p>
+        </div>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-purple-700 mb-4 mt-8">Persetujuan Pengguna</h2>
+    {% if pending_users %}
+        <div class="overflow-x-auto rounded-lg shadow-md mb-8">
+            <table class="min-w-full bg-white border border-purple-200 rounded-lg">
+                <thead class="bg-purple-100 text-purple-700">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Email</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Telepon</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Bayar</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Daftar Pada</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-purple-100">
+                    {% for user in pending_users %}
+                    <tr class="bg-white hover:bg-yellow-50 transition duration-150 ease-in-out">
+                        <td class="py-3 px-4 text-gray-800">{{ user.email }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ user.phone_number if user.phone_number else '-' }}</td>
+                        <td class="py-3 px-4 text-gray-800">Rp {{ "{:,.0f}".format(user.amount_to_pay) if user.amount_to_pay else '0' }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ user.created_at.strftime('%d %b %Y') }}</td>
+                        <td class="py-3 px-4 space-x-2">
+                            <a href="{{ url_for('approve_user', user_id=user.id) }}" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition">Setujui</a>
+                            <a href="{{ url_for('delete_user', user_id=user.id) }}" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini?')" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition">Hapus</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 mb-8">Tidak ada pengguna yang menunggu persetujuan.</p>
+    {% endif %}
+
+    <h2 class="text-2xl font-semibold text-purple-700 mb-4 mt-8">Manajemen Pengguna</h2>
+    <div class="overflow-x-auto rounded-lg shadow-md mb-8">
+        <table class="min-w-full bg-white border border-purple-200 rounded-lg">
+            <thead class="bg-purple-100 text-purple-700">
+                <tr>
+                    <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Email</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Role</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Disetujui?</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Daftar Pada</th>
+                    <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-purple-100">
+                {% for user in all_users %}
+                <tr class="bg-white hover:bg-purple-50 transition duration-150 ease-in-out">
+                    <td class="py-3 px-4 text-gray-800">{{ user.email }}</td>
+                    <td class="py-3 px-4 text-gray-800">{{ user.role }}</td>
+                    <td class="py-3 px-4 text-gray-800">
+                        {% if user.is_approved %}
+                            <span class="text-green-600 font-semibold">Ya</span>
+                        {% else %}
+                            <span class="text-red-600 font-semibold">Tidak</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-4 text-gray-800">{{ user.created_at.strftime('%d %b %Y') }}</td>
+                    <td class="py-3 px-4">
+                        {% if user.id != current_user.id %} {# Tidak bisa menghapus diri sendiri #}
+                            <a href="{{ url_for('delete_user', user_id=user.id) }}" onclick="return confirm('Apakah Anda yakin ingin menghapus user ini? Semua data terkait akan ikut terhapus.')" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition">Hapus</a>
+                        {% else %}
+                            <span class="text-gray-400">Tidak dapat dihapus</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-purple-700 mb-4 mt-8">Semua Hasil Cek Ranking</h2>
+    {% if all_rank_results %}
+        <div class="overflow-x-auto rounded-lg shadow-md mb-8">
+            <table class="min-w-full bg-white border border-purple-200 rounded-lg">
+                <thead class="bg-purple-100 text-purple-700">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Pengguna</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Keyword</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Domain</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Ditemukan</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-purple-100">
+                    {% for result in all_rank_results %}
+                    <tr class="bg-white hover:bg-purple-50 transition duration-150 ease-in-out">
+                        <td class="py-3 px-4 text-gray-800">{{ result.user.email if result.user else 'N/A' }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ result.keyword }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ result.domain }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ (result.result | from_json).total_found if result.result else 'N/A' }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ result.created_at.strftime('%d %b %Y %H:%M') }}</td>
+                        <td class="py-3 px-4">
+                            <a href="{{ url_for('view_rank_result', result_id=result.id) }}" class="text-blue-600 hover:underline">Lihat Detail</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 mb-8">Belum ada hasil cek ranking yang tersimpan.</p>
+    {% endif %}
+
+    <h2 class="text-2xl font-semibold text-purple-700 mb-4 mt-8">Riwayat Pembayaran</h2>
+    {% if all_payments %}
+        <div class="overflow-x-auto rounded-lg shadow-md">
+            <table class="min-w-full bg-white border border-purple-200 rounded-lg">
+                <thead class="bg-purple-100 text-purple-700">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Pengguna</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Jumlah</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Transaksi ID</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Status</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-purple-100">
+                    {% for payment in all_payments %}
+                    <tr class="bg-white hover:bg-purple-50 transition duration-150 ease-in-out">
+                        <td class="py-3 px-4 text-gray-800">{{ payment.user.email if payment.user else 'N/A' }}</td>
+                        <td class="py-3 px-4 text-gray-800">Rp {{ "{:,.0f}".format(payment.amount) }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ payment.transaction_id if payment.transaction_id else '-' }}</td>
+                        <td class="py-3 px-4 text-gray-800">
+                            {% if payment.is_completed %}
+                                <span class="text-green-600 font-semibold">Selesai</span>
+                            {% else %}
+                                <span class="text-red-600 font-semibold">Menunggu</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-4 text-gray-800">{{ payment.created_at.strftime('%d %b %Y %H:%M') }}</td>
+                        <td class="py-3 px-4">
+                            {% if not payment.is_completed %}
+                                <a href="{{ url_for('mark_payment_complete', payment_id=payment.id) }}" class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition">Tandai Selesai</a>
+                            {% else %}
+                                <span class="text-gray-400">N/A</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600">Belum ada riwayat pembayaran.</p>
+    {% endif %}
+
+    {# Filter from_json (dummy atau didefinisikan di app.py) #}
+    <script>
+        // Placeholder for Jinja2 custom filter if needed.
+        // In app.py, you would register a filter like:
+        // app.jinja_env.filters['from_json'] = lambda s: json.loads(s) if s else {}
+    </script>
+{% endblock %}

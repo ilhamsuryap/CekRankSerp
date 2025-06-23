@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Informasi Pembayaran - SERP Ranker{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">Menunggu Persetujuan Akun</h1>
+    <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 p-6 rounded-lg shadow-sm text-center mb-6">
+        <p class="text-lg font-semibold mb-4">Akun Anda ({{ current_user.email }}) belum disetujui oleh admin.</p>
+        <p class="mb-2">Untuk mengaktifkan akun Anda, mohon lakukan pembayaran sebesar:</p>
+        <p class="text-4xl font-bold text-purple-600 my-4">Rp {{ current_user.payment_amount | int | format_currency_id }}</p>
+        <p class="text-lg font-semibold mb-4">Dengan kode unik di belakangnya: <span class="text-green-600">{{ current_user.payment_unique_code }}</span></p>
+        <p class="mb-4">Contoh transfer: Jika Anda perlu membayar Rp 50.000 dengan kode unik 123, total yang harus ditransfer adalah Rp 50.123.</p>
+        <p class="font-medium">Silakan transfer ke rekening berikut:</p>
+        <p class="text-lg font-bold text-gray-800">Bank: BCA</p>
+        <p class="text-lg font-bold text-gray-800">Nomor Rekening: 123-456-7890 (a.n. PT SERP Ranker)</p>
+        <p class="mt-6 text-gray-700">Setelah melakukan pembayaran, mohon tunggu konfirmasi dari admin. Anda akan menerima notifikasi setelah akun Anda disetujui.</p>
+    </div>
+    <div class="text-center mt-6">
+        <a href="{{ url_for('logout') }}" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition shadow-md font-semibold">Logout</a>
+    </div>
+
+    <script>
+        // Custom Jinja2 filter to format currency
+        // This is a client-side hack for display. For server-side,
+        // you'd typically implement a custom filter in Python.
+        // For demonstration, we'll just show the raw int or expect Python formatting.
+        // Let's add a simple JS function if you want client-side formatting.
+        function formatCurrencyID(amount) {
+            return new Intl.NumberFormat('id-ID').format(amount);
+        }
+
+        // Example of how to use it if you rendered amount without filter
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     const amountElement = document.querySelector('.text-4xl.font-bold span');
+        //     if (amountElement) {
+        //         amountElement.textContent = formatCurrencyID(parseInt(amountElement.textContent));
+        //     }
+        // });
+    </script>
+{% endblock %}
+
+{% raw %}
+{# Define a custom filter in app.py if you want server-side formatting #}
+{% set currency_filter = '<script>function format_currency_id(value) { return new Intl.NumberFormat("id-ID").format(value); }</script>' %}
+{# Example usage in app.py: app.jinja_env.filters['format_currency_id'] = format_currency_id_func #}
+{# For now, assuming Jinja will just output the integer, and we manually add "Rp " and comma. #}
+{# The `int` filter ensures it's an integer before printing. #}
+{% endraw %}

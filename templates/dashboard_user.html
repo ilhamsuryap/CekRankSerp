@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard User - SERP Rank Checker{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">Dashboard User 👋</h1>
+    <p class="text-center text-gray-600 mb-8">Selamat datang, {{ current_user.email }}! Di sini Anda bisa melihat riwayat cek ranking Anda.</p>
+
+    <div class="mb-8 flex justify-center">
+        <a href="{{ url_for('index') }}" class="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-75 flex items-center">
+            <i class="fas fa-search mr-2"></i> Cek Rank Baru
+        </a>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-purple-700 mb-4">Riwayat Cek Ranking Anda</h2>
+
+    {% if user_rank_results %}
+        <div class="overflow-x-auto rounded-lg shadow-md">
+            <table class="min-w-full bg-white border border-purple-200 rounded-lg">
+                <thead class="bg-purple-100 text-purple-700">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Kata Kunci</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Domain</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Ditemukan</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-purple-100">
+                    {% for result in user_rank_results %}
+                    <tr class="bg-white hover:bg-purple-50 transition duration-150 ease-in-out">
+                        <td class="py-3 px-4 text-gray-800">{{ result.created_at.strftime('%d %b %Y %H:%M') }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ result.keyword }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ result.domain }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ (result.result | from_json).total_found }}</td>
+                        <td class="py-3 px-4">
+                            <a href="{{ url_for('view_rank_result', result_id=result.id) }}" class="text-blue-600 hover:underline">Lihat Detail</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 mt-4">Anda belum memiliki riwayat cek ranking. Mulai cek sekarang!</p>
+    {% endif %}
+
+    {# Filter untuk from_json di Jinja2 #}
+    <script>
+        // Fungsi helper untuk parsing JSON di Jinja2 (jika diperlukan secara langsung di HTML)
+        // Sebenarnya lebih baik dilakukan di Python sebelum diteruskan ke template
+        // Namun, jika Anda ingin mem-parse JSON langsung di template untuk display,
+        // Anda bisa mendefinisikan filter kustom di Flask app (app.py)
+        // Atau, saya bisa mengonversi `result` di app.py sebelum mengirimkannya
+        // Untuk saat ini, asumsikan saya sudah mengonversi di app.py
+        // Flask secara otomatis mengonversi JSON string yang dimuat dari db.Column(db.Text)
+        // jika Anda mengaksesnya sebagai dictionary di Python.
+        // Di sini saya tambahkan filter dummy, namun di app.py saya sudah pakai json.loads
+    </script>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar - SERP Rank Checker{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">📝 Buat Akun Baru</h1>
+    <p class="text-center text-gray-600 mb-8">Daftar sekarang untuk mulai memeriksa ranking website Anda!</p>
+
+    <form method="POST" action="{{ url_for('register') }}" class="space-y-6">
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Alamat Email</label>
+            <input type="email" id="email" name="email" required
+                   class="mt-1 p-3 w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                   placeholder="nama@contoh.com">
+        </div>
+
+        <div>
+            <label for="phone_number" class="block text-sm font-medium text-gray-700">Nomor Telepon (WhatsApp)</label>
+            <input type="tel" id="phone_number" name="phone_number" required
+                   class="mt-1 p-3 w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                   placeholder="contoh: 6281234567890 (tanpa +)">
+            <p class="mt-2 text-xs text-gray-500">Kami akan mengirimkan notifikasi penting melalui nomor ini.</p>
+        </div>
+
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password" required
+                   class="mt-1 p-3 w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                   placeholder="Minimal 6 karakter">
+        </div>
+
+        <div>
+            <label for="confirm_password" class="block text-sm font-medium text-gray-700">Konfirmasi Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required
+                   class="mt-1 p-3 w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                   placeholder="Masukkan ulang password Anda">
+        </div>
+
+        <div>
+            <button type="submit"
+                    class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                Daftar
+            </button>
+        </div>
+    </form>
+
+    <p class="mt-8 text-center text-sm text-gray-600">
+        Sudah punya akun?
+        <a href="{{ url_for('login') }}" class="font-medium text-purple-600 hover:text-purple-500">Login di sini</a>
+    </p>
+{% endblock %}

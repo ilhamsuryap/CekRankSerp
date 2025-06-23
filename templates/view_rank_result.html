@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Hasil Rank - SERP Rank Checker{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">Detail Hasil Cek Ranking</h1>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <p class="text-lg text-gray-800 mb-2">
+            <span class="font-semibold">Kata Kunci:</span> {{ result.keyword }}
+        </p>
+        <p class="text-lg text-gray-800 mb-2">
+            <span class="font-semibold">Domain Target:</span> {{ result.domain }}
+        </p>
+        <p class="text-lg text-gray-800 mb-2">
+            <span class="font-semibold">Ditemukan di:</span> {{ result.total_found }} posisi
+        </p>
+        <p class="text-lg text-gray-800 mb-2">
+            <span class="font-semibold">Dicek Pada:</span> {{ rank_result_obj.created_at.strftime('%d %b %Y %H:%M') }}
+        </p>
+        <p class="text-lg text-gray-800">
+            <span class="font-semibold">Dicek Oleh:</span> {{ rank_result_obj.user.email if rank_result_obj.user else 'N/A' }}
+        </p>
+    </div>
+
+    {% if result.ranks %}
+        <h2 class="text-2xl font-semibold text-purple-700 mb-4">Posisi Ditemukan:</h2>
+        <div class="overflow-x-auto rounded-lg shadow-md">
+            <table class="min-w-full bg-white border border-purple-200 rounded-lg">
+                <thead class="bg-purple-100 text-purple-700">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Posisi</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">Judul</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium uppercase tracking-wider">URL</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-purple-100">
+                    {% for item in result.ranks %}
+                    <tr class="bg-white hover:bg-purple-50 transition duration-150 ease-in-out">
+                        <td class="py-3 px-4 text-gray-800">{{ item.position }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ item.title }}</td>
+                        <td class="py-3 px-4">
+                            <a href="{{ item.link }}" class="text-blue-600 hover:underline break-all" target="_blank" rel="noopener noreferrer">
+                                {{ item.link }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 mt-4">Domain tidak ditemukan dalam hasil pencarian untuk kata kunci ini.</p>
+    {% endif %}
+
+    <div class="mt-8 text-center">
+        <a href="{{ url_for('dashboard') }}" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Dashboard
+        </a>
+    </div>
+{% endblock %}

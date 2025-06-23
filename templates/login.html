@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Login - SERP Rank Checker{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold text-purple-700 mb-6 text-center">👋 Selamat Datang Kembali!</h1>
+    <p class="text-center text-gray-600 mb-8">Silakan login untuk mengakses fitur cek ranking website Anda.</p>
+
+    <form method="POST" action="{{ url_for('login') }}" class="space-y-6">
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Alamat Email</label>
+            <input type="email" id="email" name="email" required
+                   class="mt-1 p-3 w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                   placeholder="nama@contoh.com">
+        </div>
+
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password" required
+                   class="mt-1 p-3 w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent"
+                   placeholder="********">
+        </div>
+
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <input id="remember_me" name="remember_me" type="checkbox"
+                       class="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded">
+                <label for="remember_me" class="ml-2 block text-sm text-gray-900">Ingat saya</label>
+            </div>
+            <div class="text-sm">
+                <a href="{{ url_for('forgot_password') }}" class="font-medium text-purple-600 hover:text-purple-500">Lupa Password?</a>
+            </div>
+        </div>
+
+        <div>
+            <button type="submit"
+                    class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                Login
+            </button>
+        </div>
+    </form>
+
+    <p class="mt-8 text-center text-sm text-gray-600">
+        Belum punya akun?
+        <a href="{{ url_for('register') }}" class="font-medium text-purple-600 hover:text-purple-500">Daftar Sekarang</a>
+    </p>
+{% endblock %}
